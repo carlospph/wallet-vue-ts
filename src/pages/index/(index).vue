@@ -1,72 +1,81 @@
 <template>
   <section id="page-form">
-
     <div class="container">
+      <div class="header-carteira">
+        <div>
+          <div class="d-flex">
+            <q-icon name="wallet" size="3rem" />
+            <h1 class="texto-logo">Carteira digita7</h1>
+          </div>
 
-    <div class="header-carteira">
-      <div>
-        <div class="d-flex">
-          <q-icon name="wallet" size="3rem" />
-          <h1 class="texto-logo">Carteira digita7</h1>
+          <span class="header-saldo"> {{ moedaBRL(totalSaldo) }}</span>
         </div>
-
-        <span class="header-saldo">R$ 6.000,00</span>
+        <q-btn icon="add" label="adicionaor" type="submit" color="orange" />
       </div>
-      <q-btn icon="add" label="adicionaor" type="submit" color="orange" />
+
+      <q-form class="form" @submit.prevent="adicionar">
+        <q-input
+          type="number"
+          placeholder="R$ 1000,00"
+          outlined
+          v-model="formulario.valor"
+        />
+        <q-input
+          type="text"
+          placeholder="Descrição"
+          outlined
+          v-model="formulario.descricao"
+        />
+        <q-input
+          type="date"
+          placeholder="Data do evento"
+          outlined
+          v-model="formulario.dataEvento"
+        />
+        <q-select
+          outlined
+          :options="tiposEventos"
+          v-model="formulario.tipoEvento"
+          class="select-personalizado"
+          label="Selecione o tipo"
+        />
+        <q-btn color="green" icon="add" label="Adicionar" type="submit" />
+      </q-form>
+
+      <div class="bar-search">
+        <h4>Movimentações</h4>
+        <q-select
+          outlined
+          :options="tipoEventosFilter"
+          v-model="filtroTipo"
+          class="select-personalizado"
+          label="Selecione o filtro"
+        />
+      </div>
+
+      <ul class="lista-transacoes">
+        <li v-for="transacao in transacoes" :key="transacao.id">
+          <p class="item-w">{{ transacao.descricao }}</p>
+          <p>{{ transacao.dataEvento }}</p>
+          <p>{{ transacao.tipoEvento }}</p>
+          <p class="item-w">{{moedaBRL(transacao.valor)}}</p>
+          <div class="actions">
+            <q-btn icon="delete" color="red" @click="remover(transacao.id)" />
+            <q-btn icon="edit" color="orange" />
+          </div>
+        </li>
+      </ul>
     </div>
-
-    <q-form class="form" @submit.prevent="adicionar">
-      <q-input
-        type="number"
-        placeholder="R$ 1000,00"
-        outlined
-        v-model="formulario.valor"
-      />
-      <q-input
-        type="text"
-        placeholder="Descrição"
-        outlined
-        v-model="formulario.descricao"
-      />
-      <q-input
-        type="date"
-        placeholder="Data do evento"
-        outlined
-        v-model="formulario.dataEvento"
-      />
-      <q-select outlined :options="tiposEventos" v-model="formulario.tipoEvento" class="select-personalizado" label="Selecione o tipo"/>
-      <q-btn color="green" icon="add" label="Adicionar" type="submit" />
-    </q-form>
-
-
-    <div class="bar-search">
-      <h4>Movimentações</h4>
-      <q-select outlined :options="tipoEventosFilter" v-model="filtroTipo" class="select-personalizado" label="Selecione o filtro"/>
-    </div>
-
-    <ul class="lista-transacoes">
-      <li v-for="transacao in transacoes" :key="transacao.id">
-        <p class="item-w">{{ transacao.descricao }}</p>
-        <p>{{ transacao.dataEvento }}</p>
-        <p>{{ transacao.tipoEvento }}</p>
-        <p class="item-w">{{ transacao.valor }}</p>
-        <div class="actions">
-          <q-btn icon="delete" color="red" @click="remover(transacao.id)"/>
-          <q-btn icon="edit" color="orange" />
-        </div>
-      </li>
-    </ul>
-  </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
-const filtroTipo = ref('');
+const filtroTipo = ref("");
 
 interface Formulario {
-  valor: null;
+  valor: number | null;
   descricao: string;
   tipoEvento: string;
   dataEvento: string;
@@ -86,41 +95,75 @@ const formulario = ref<Formulario>({
 const transacoes = ref<Transacao[]>([
   {
     id: 100,
-    valor: 2000,
+    valor: 50,
     descricao: "Mercado",
     tipoEvento: "Despesa",
     dataEvento: "09-09-2026"
   },
   {
     id: 101,
-    valor: 2000,
+    valor: 100,
     descricao: "Salário",
-    tipoEvento: "Renda",
+    tipoEvento: "Receita",
     dataEvento: "09-09-2026"
-  }
+  },
+
 ]);
 
-const tiposEventos = ["Renda", "Despesa"];
-const tipoEventosFilter = ["Todos", "Renda", "Despesa"];
-
+const tiposEventos = ["Receita", "Despesa"];
+const tipoEventosFilter = ["Todos", "Receita", "Despesa"];
 
 function adicionar(): void {
   transacoes.value.push({
     id: Date.now(),
-    valor: formulario.value.valor,
+    valor: Number(formulario.value.valor),
     descricao: formulario.value.descricao,
     dataEvento: formulario.value.dataEvento,
     tipoEvento: formulario.value.tipoEvento
   });
 
+  formulario.value.valor = null;
+  formulario.value.descricao = "";
+  formulario.value.dataEvento = "";
+  formulario.value.tipoEvento = "";
+
   alert("Adicionado com sucesso!");
 }
 
-function remover(id:number) :void{
-  if(confirm("Deseja excluir transação?")){
-    transacoes.value = transacoes.value.filter(u=>u.id !== id)
+function remover(id: number): void {
+  if (confirm("Deseja excluir transação?")) {
+    transacoes.value = transacoes.value.filter(u => u.id !== id);
   }
 }
+
+
+
+// utils/moedaBRL.ts
+function moedaBRL(valor: number | null): string {
+  if (valor === null) {
+    return "R$ 0,00";
+  }
+
+  return valor.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
+
+//Realizar calculos
+const totalReceita = computed(() =>
+  transacoes.value
+    .filter(t => t.tipoEvento === "Receita")
+    .reduce((acumulador, t) => acumulador + (t.valor ?? 0), 0)
+);
+
+const totalDespesa = computed(() =>
+  transacoes.value
+    .filter(t => t.tipoEvento === "Despesa")
+    .reduce((acumulador, t) => acumulador + (t.valor ?? 0), 0)
+);
+
+const totalSaldo = computed(() => totalReceita.value - totalDespesa.value);
 </script>
 
 <style scoped>
@@ -166,17 +209,16 @@ function remover(id:number) :void{
   padding: 1rem;
 }
 
-.select-personalizado{
+.select-personalizado {
   max-width: 300px;
-  width:100%;
+  width: 100%;
 }
 
-
-.bar-search{
+.bar-search {
   background-color: #fff;
-  margin:1rem 0;
-  padding:1.5rem;
-  border-radius:5px;
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
 }
