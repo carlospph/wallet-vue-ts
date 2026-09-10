@@ -114,6 +114,18 @@ const tiposEventos = ["Receita", "Despesa"];
 const tipoEventosFilter = ["Todos", "Receita", "Despesa"];
 
 function adicionar(): void {
+
+  if(formulario.value.valor === null || !formulario.value.descricao.trim() || !formulario.value.dataEvento || !formulario.value.tipoEvento){
+    alert("Todos os campos devem ser preenchidos!");
+    return;
+  }
+
+  if( formulario.value.valor <= 0){
+    alert("Valor digitado não pode ser 0 ou menor do que zero!");
+    return;
+  }
+
+
   transacoes.value.push({
     id: Date.now(),
     valor: Number(formulario.value.valor),
