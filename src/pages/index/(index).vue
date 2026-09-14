@@ -1,5 +1,48 @@
 <template>
   <section id="page-form">
+    <q-dialog v-model="modalAdd">
+      <q-card style="width: 100%; max-width: 580px; padding: 40px 30px">
+        <q-btn
+          label="X"
+          color="red"
+          class="absolute-top-right q-ma-md"
+          @click="fecharModal"
+        />
+        <!-- <q-separator/> -->
+
+        <h3>Formulário de cadastro</h3>
+
+        <q-form class="form" @submit.prevent="adicionar">
+          <q-input
+            type="number"
+            placeholder="R$ 1000,00"
+            outlined
+            v-model="formulario.valor"
+          />
+          <q-input
+            type="text"
+            placeholder="Descrição"
+            outlined
+            v-model="formulario.descricao"
+          />
+          <q-input
+            type="date"
+            placeholder="Data do evento"
+            outlined
+            v-model="formulario.dataEvento"
+          />
+          <q-select
+            outlined
+            :options="tiposEventos"
+            v-model="formulario.tipoEvento"
+            class="select-personalizado"
+            label="Selecione o tipo"
+          />
+          <q-btn color="green" icon="add" label="Adicionar" type="submit" />
+        </q-form>
+      </q-card>
+    </q-dialog>
+
     <div class="container">
       <div class="header-carteira">
         <div>
@@ -10,37 +53,14 @@
 
           <span class="header-saldo"> {{ moedaBRL(totalSaldo) }}</span>
         </div>
-        <q-btn icon="add" label="adicionaor" type="submit" color="orange" />
+        <q-btn
+          icon="add"
+          label="adicionaor"
+          type="submit"
+          color="orange"
+          @click="exibirModal"
+        />
       </div>
-
-      <q-form class="form" @submit.prevent="adicionar">
-        <q-input
-          type="number"
-          placeholder="R$ 1000,00"
-          outlined
-          v-model="formulario.valor"
-        />
-        <q-input
-          type="text"
-          placeholder="Descrição"
-          outlined
-          v-model="formulario.descricao"
-        />
-        <q-input
-          type="date"
-          placeholder="Data do evento"
-          outlined
-          v-model="formulario.dataEvento"
-        />
-        <q-select
-          outlined
-          :options="tiposEventos"
-          v-model="formulario.tipoEvento"
-          class="select-personalizado"
-          label="Selecione o tipo"
-        />
-        <q-btn color="green" icon="add" label="Adicionar" type="submit" />
-      </q-form>
 
       <div class="bar-search">
         <h4>Movimentações</h4>
@@ -58,10 +78,10 @@
           <p class="item-w">{{ transacao.descricao }}</p>
           <p>{{ transacao.dataEvento }}</p>
           <p>{{ transacao.tipoEvento }}</p>
-          <p class="item-w">{{moedaBRL(transacao.valor)}}</p>
+          <p class="item-w">{{ moedaBRL(transacao.valor) }}</p>
           <div class="actions">
             <q-btn icon="delete" color="red" @click="remover(transacao.id)" />
-            <q-btn icon="edit" color="orange" />
+            <q-btn icon="edit" color="orange" @click="editar(transacao)" />
           </div>
         </li>
       </ul>
@@ -71,6 +91,15 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useCarteira } from "@/composable/useCarteira";
+import { Notify } from "quasar";
+const { alertar, modalAdd, exibirModal, fecharModal } = useCarteira();
+const tipo = ref(null);
+const options = ["Receita", "Despesa"];
+
+function editar(transacao: Transacao) {
+  console.log(transacao);
+}
 
 const filtroTipo = ref("");
 
@@ -106,25 +135,32 @@ const transacoes = ref<Transacao[]>([
     descricao: "Salário",
     tipoEvento: "Receita",
     dataEvento: "09-09-2026"
-  },
-
+  }
 ]);
 
 const tiposEventos = ["Receita", "Despesa"];
 const tipoEventosFilter = ["Todos", "Receita", "Despesa"];
 
 function adicionar(): void {
-
-  if(formulario.value.valor === null || !formulario.value.descricao.trim() || !formulario.value.dataEvento || !formulario.value.tipoEvento){
-    alert("Todos os campos devem ser preenchidos!");
+  if (
+    formulario.value.valor === null ||
+    !formulario.value.descricao.trim() ||
+    !formulario.value.dataEvento ||
+    !formulario.value.tipoEvento
+  ) {
+    Notify.create({
+      message: "Preencha todos os campos!",
+      color: "negative",
+      timeout: 1000,
+      position: "center"
+    });
     return;
   }
 
-  if( formulario.value.valor <= 0){
+  if (formulario.value.valor <= 0) {
     alert("Valor digitado não pode ser 0 ou menor do que zero!");
     return;
   }
-
 
   transacoes.value.push({
     id: Date.now(),
@@ -139,16 +175,29 @@ function adicionar(): void {
   formulario.value.dataEvento = "";
   formulario.value.tipoEvento = "";
 
-  alert("Adicionado com sucesso!");
+  Notify.create({
+    message: "Operação adicionada!",
+    color: "positive",
+    position: "center",
+    timeout: 1000
+  });
+
+  fecharModal();
 }
 
 function remover(id: number): void {
   if (confirm("Deseja excluir transação?")) {
-    transacoes.value = transacoes.value.filter(u => u.id !== id);
+     transacoes.value = transacoes.value.filter(
+      u => u.id !== id
+    );
+    Notify.create({
+      message: "Operação apagada!",
+      color: "positive",
+      position: "center",
+      timeout: 1000
+    });
   }
 }
-
-
 
 // utils/moedaBRL.ts
 function moedaBRL(valor: number | null): string {
@@ -158,7 +207,7 @@ function moedaBRL(valor: number | null): string {
 
   return valor.toLocaleString("pt-BR", {
     style: "currency",
-    currency: "BRL",
+    currency: "BRL"
   });
 }
 
