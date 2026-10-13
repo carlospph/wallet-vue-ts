@@ -12,8 +12,7 @@
         />
 
         <q-toolbar-title> VueTS </q-toolbar-title>
-
-       </q-toolbar>
+      </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" bordered>
@@ -41,13 +40,24 @@ import EssentialLink, {
 } from "@/components/EssentialLink.vue";
 
 const linksList: EssentialLinkProps[] = [
-
   {
     label: "GitHub",
-    caption: "github.com/carlosphh",
+    caption: "github.com/carlospph",
     icon: "code",
-    link: "https://github.com/carlospph"
+    href: "https://github.com/carlospph"
   },
+  {
+    label: "Carteira",
+    caption: "Carteira financeira",
+    icon: "account_balance_wallet",
+    to: "/"
+  },
+  {
+    label: "Notas Adicionais",
+    caption: "Observações",
+    icon: "description",
+    to: "/NotasAdicionais"
+  }
 ];
 
 const leftDrawerOpen = ref(false);
@@ -56,3 +66,7 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<style scoped>
+/* Adicione estilos personalizados aqui, se necessário */
+</style>
