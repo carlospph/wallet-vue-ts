@@ -45,10 +45,9 @@
     <div class="container">
       <div class="header-carteira">
         <div class="row-top">
-          <div class="logo">
+          <div class="flex items-center q-gutter-sm">
             <q-icon name="wallet" size="3rem" />
-            <h1 class="texto-logo"
-              >Carteira <span class="logo-pan">digital</span></h1
+            <h1 class="q-pa-none q-ma-none">Carteira <span class="text-secondary">digital</span></h1
             >
           </div>
 
@@ -304,7 +303,7 @@ const totalSaldo = computed(() => totalReceita.value - totalDespesa.value);
 
   @media (min-width: 500px) {
     font-size: 1.5rem;
-    
+
   }
 }
 

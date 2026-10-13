@@ -1,72 +1,26 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+<section class="container">
+  <h1>Acesso ao sistema</h1>
+  <p>Gerencie suas atividades</p>
 
-        <q-toolbar-title> VueTS </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.label"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+  <q-form @submit.prevent="handleLogin" class="flex column q-gutter-lg">
+    <q-input type="email" v-model="email" placeholder="E-mail" outlined/>
+    <q-input type="password" v-model="password" placeholder="Senha" outlined/>
+    <q-btn type="submit" label="entrar" color="green"/>
+  </q-form>
+</section>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import EssentialLink, {
-  type EssentialLinkProps
-} from "@/components/EssentialLink.vue";
-
-const linksList: EssentialLinkProps[] = [
-  {
-    label: "GitHub",
-    caption: "github.com/carlospph",
-    icon: "code",
-    href: "https://github.com/carlospph"
-  },
-  {
-    label: "Carteira",
-    caption: "Carteira financeira",
-    icon: "account_balance_wallet",
-    to: "/"
-  },
-  {
-    label: "Notas Adicionais",
-    caption: "Observações",
-    icon: "description",
-    to: "/NotasAdicionais"
-  }
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+import { useUsuario } from '@/composable/useUsuario';
+const { handleLogin,email,password} = useUsuario();
 </script>
 
 <style scoped>
-/* Adicione estilos personalizados aqui, se necessário */
+.container{
+  max-width:450px;
+  width: 100%;
+  box-shadow: 0 0 10px #00000050;
+  margin:3rem auto 1rem;
+}
 </style>

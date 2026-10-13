@@ -36,12 +36,12 @@ declare module 'vue-router/auto-routes' {
       '/',
       Record<never, never>,
       Record<never, never>,
-      | '//(index)'
       | '//NotasAdicionais'
+      | '//home'
     >,
-    '//(index)': RouteRecordInfo<
-      '//(index)',
-      '/',
+    '//home': RouteRecordInfo<
+      '//home',
+      '/home',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -60,6 +60,13 @@ declare module 'vue-router/auto-routes' {
       { path: ParamValue<false> },
       | never
     >,
+    '/LoginDefault': RouteRecordInfo<
+      '/LoginDefault',
+      '/LoginDefault',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
   }
 
   /**
@@ -76,16 +83,16 @@ declare module 'vue-router/auto-routes' {
     'src/pages/index.vue': {
       routes:
         | '/'
-        | '//(index)'
         | '//NotasAdicionais'
+        | '//home'
       views:
         | 'default'
       pathParamNames:
         | never
     }
-    'src/pages/index/(index).vue': {
+    'src/pages/index/home.vue': {
       routes:
-        | '//(index)'
+        | '//home'
       views:
         | never
       pathParamNames:
@@ -106,6 +113,14 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'path'
+    }
+    'src/pages/LoginDefault.vue': {
+      routes:
+        | '/LoginDefault'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
   }
 

@@ -1,0 +1,77 @@
+<template>
+  <q-layout view="lHh Lpr lFf">
+    <q-header elevated>
+      <q-toolbar>
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
+
+        <q-toolbar-title> VueTS </q-toolbar-title>
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer v-model="leftDrawerOpen" bordered>
+      <q-list>
+        <q-item-label header> Essential Links </q-item-label>
+
+        <EssentialLink
+          v-for="link in linksList"
+          :key="link.label"
+          v-bind="link"
+        />
+      </q-list>
+    </q-drawer>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import EssentialLink, {
+  type EssentialLinkProps
+} from "@/components/EssentialLink.vue";
+
+const linksList: EssentialLinkProps[] = [
+ {
+    label: "Home",
+    caption: "Home",
+    icon: "home",
+    to: "/"
+  },
+  {
+    label: "Carteira",
+    caption: "Carteira financeira",
+    icon: "account_balance_wallet",
+    to: "/"
+  },
+  {
+    label: "Notas Adicionais",
+    caption: "Observações",
+    icon: "description",
+    to: "/NotasAdicionais"
+  }, {
+    label: "GitHub",
+    caption: "github.com/carlospph",
+    icon: "code",
+    href: "https://github.com/carlospph"
+  },
+];
+
+const leftDrawerOpen = ref(false);
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+</script>
+
+<style scoped>
+/* Adicione estilos personalizados aqui, se necessário */
+</style>

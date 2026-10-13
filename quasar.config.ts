@@ -5,20 +5,17 @@ import { defineConfig } from "#q-app";
 
 export default defineConfig((/* ctx */) => {
   return {
-
     boot: [],
 
     css: ["app.scss"],
 
     extras: [
-
       "roboto-font", // optional, you are not bound to it
       "material-icons" // optional, you are not bound to it
     ],
 
     build: {
-      target: {
-      },
+      target: {},
 
       typescript: {
         strict: true,
@@ -27,8 +24,7 @@ export default defineConfig((/* ctx */) => {
 
       filenameBasedRouting: true,
 
-      vueRouterMode: "hash" // available values: 'hash', 'history'
-
+      vueRouterMode: "history" // available values: 'hash', 'history'
     },
 
     devServer: {
@@ -38,60 +34,45 @@ export default defineConfig((/* ctx */) => {
     framework: {
       config: {},
 
-
-      plugins: ['Notify', 'Dialog'],
+      plugins: ["Notify", "Dialog"]
     },
 
     animations: [],
 
-
-
-     ssr: {
-
+    ssr: {
       prodPort: 3000,
       middlewares: [
         "render" // keep this as last one
       ]
-
-
     },
 
-     ssg: {
+    ssg: {},
 
-    },
-
-     pwa: {
+    pwa: {
       workboxMode: "GenerateSW" // 'GenerateSW' or 'InjectManifest'
-
     },
 
-     cordova: {},
+    cordova: {},
 
-     capacitor: {
+    capacitor: {
       hideSplashscreen: true
     },
 
-     electron: {
-
-
+    electron: {
       preloadScripts: ["electron-preload"],
 
       inspectPort: 5858,
 
       bundler: "packager", // 'packager' or 'builder'
 
-      packager: {
-
-      },
+      packager: {},
 
       builder: {
-
         appId: ""
       }
     },
 
-     bex: {
-
+    bex: {
       /**
        * The list of extra scripts (js/ts) not in your bex manifest that you want to
        * compile and use in your browser extension. Maybe dynamic use them?

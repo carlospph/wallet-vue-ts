@@ -4,5 +4,5 @@ import CarteiraDigital from '@/components/carteira/CarteiraDigital.vue';
 </script>
 
 <template>
-  <CarteiraDigital />
+   <CarteiraDigital />
 </template>
